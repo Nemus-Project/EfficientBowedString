@@ -31,11 +31,13 @@ timeVecUS = (1:floor(timeSamples/osFac))*k*osFac;%Time vector after undersamplin
 
 %%%%% String Length & Fretting Position
 baseLength = 0.69;  %String base length [m]
-frettingPos = 1;%4/5;%64/81;
-L = baseLength*frettingPos/4;% - 0.076;  %1 semitone            
+frettingPos = 1;
+                %27/32; %3rdm
+                %64/81; 3rdM
+                %8/9;   %1 semitone
+                %4/5;   4th
 
-% excitPos = 0.833;
-% outPos = 0.33*L;
+L = baseLength*frettingPos;           
 
 Fb = zeros(1,timeSamples);
 
