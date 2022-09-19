@@ -17,7 +17,10 @@ saveAudio = false;
 %if set true the system is solved with Sherman Morrison formula, otherwise with backslash
 smSolver = true;
 
-stringToPlay = 3;   %0=A3, 1=D3, 2=G2, 3=C2
+%sets if to use the improved friction model from desvages
+desvagesFriction = false;
+
+stringToPlay = 2;   %0=A3, 1=D3, 2=G2, 3=C2
 
 osFac = 1;          %Oversampling factor
 SR = 44100*osFac;   %Sample rate [Hz]
@@ -109,20 +112,22 @@ switch stringToPlay
 end
 
 a = 100;            %Bow free parameter
+muD = 0.3;
 
 
 %%%%% Bow Speed & Pressure
 bowVel = zeros(1,timeSamples);
 
 % Const
-Fb(:) = 20;
+Fb(:) = 35;
 
 % %Linear ramp
 bowRampLength = 2*timeSamples/T;
 maxVb = 0.2; startVb = 0.1; endVb = 0.0;
-bowVel(1:floor(1*bowRampLength/5)) = linspace(startVb,maxVb,floor(1*bowRampLength/5));
-bowVel(floor(1*bowRampLength/5)+1:floor(2*bowRampLength/5)) = maxVb;
-bowVel(floor(2*bowRampLength/5)+1:floor(3*bowRampLength/5))= linspace(maxVb,endVb,bowRampLength/5);
+timeFrac = 2;
+bowVel(1:floor(1*bowRampLength/timeFrac)) = linspace(startVb,maxVb,floor(1*bowRampLength/timeFrac));
+bowVel(floor(1*bowRampLength/timeFrac)+1:floor(2*bowRampLength/timeFrac)) = maxVb;
+bowVel(floor(2*bowRampLength/timeFrac)+1:floor(3*bowRampLength/timeFrac))= linspace(maxVb,endVb,bowRampLength/timeFrac);
 
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++%
 %%%%% Computing eigenfrequencies and eigenvectors
@@ -198,8 +203,15 @@ for i = 1:timeSamples
     %calculating bow input
     zeta1 = zetaTR*x;
     eta = zeta1 - bowVel(i);
-    d = sqrt(2*a)*exp(-a*eta^2 + 0.5);
-    lambda = sqrt(2*a)*exp(-a*eta^2 + 0.5)*(1 - 2*a*eta^2);
+    if desvagesFriction
+        %Desvages friction
+        d = sqrt(2*a)*exp(-a*eta^2 + 0.5) + 2*muD*atan(eta/0.02)/pi/eta;
+        lambda = sqrt(2*a)*exp(-a*eta^2 + 0.5)*(1 - 2*a*eta^2) + 2*muD*50/pi/(2500*eta^2 + 1);
+    else
+        %Bilbao friction
+        d = sqrt(2*a)*exp(-a*eta^2 + 0.5);
+        lambda = sqrt(2*a)*exp(-a*eta^2 + 0.5)*(1 - 2*a*eta^2);
+    end
     
     if smSolver
 %     %Calculating known terms
