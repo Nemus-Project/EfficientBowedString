@@ -1,5 +1,5 @@
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-%       Bowed Stiff String 
+%     Cello Bowed Stiff String 
 %    Modal system - Non Iterative
 %         Riccardo Russo
 %       University of Bologna
@@ -182,7 +182,7 @@ Out = zeros(1,timeSamples);
 %%%%% Initializing Sherman Morrison Algorithm
 %Offline computation of part of matrix A and extracting diagonal components
 %into vectors for speeding up computation
-A = full(I - 0.5*k*JOmega);
+A = full(I - 0.5*k*JOmega + 0.5*k*C);
 A11 = diag(A(1:modesNumber,1:modesNumber));
 A12 = diag(A(1:modesNumber,modesNumber + 1:end));
 A21 = diag(A(modesNumber + 1:end,1:modesNumber));
@@ -193,7 +193,7 @@ invA11 = (1./A11); %Notice that A11=eye so invA11=A11
 shurComp = A22 - A21.*(invA11.*A12);
 invShurComp = 1./shurComp;
 
-B1 = sparse(I + 0.5*k*JOmega - k*C);
+B1 = sparse(I + 0.5*k*JOmega - 0.5*k*C);
 
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++%
 %%%%% Simulation
