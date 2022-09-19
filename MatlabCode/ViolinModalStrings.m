@@ -1,5 +1,5 @@
 %++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-%   Double Bass Bowed Stiff String 
+%     Violin Bowed Stiff String 
 %    Modal system - Non Iterative
 %         Riccardo Russo
 %       University of Bologna
@@ -20,7 +20,7 @@ smSolver = true;
 %sets if to use the improved friction model from desvages
 desvagesFriction = false;
 
-stringToPlay = 0;   %0=G2, 1=D2, 2=A1, 3=E1
+stringToPlay = 3;   %0=E5, 1=A4, 2=D4, 3=G3
 
 osFac = 1;          %Oversampling factor
 SR = 44100*osFac;   %Sample rate [Hz]
@@ -33,7 +33,7 @@ timeVec = (1:floor(timeSamples))*k;              %Time vector [sec]
 timeVecUS = (1:floor(timeSamples/osFac))*k*osFac;%Time vector after undersampling
 
 %%%%% String Length & Fretting Position
-baseLength = 1.06;  %String base length [m]
+baseLength = 0.32;  %String base length [m]
 frettingPos = 1;
                 %27/32; %3rdm
                 %64/81; 3rdM
@@ -44,16 +44,16 @@ L = baseLength*frettingPos;
 
 Fb = zeros(1,timeSamples);
 
-%%%%% Double bass Strings
+%%%%% Cello Strings
 switch stringToPlay
     case 0
-        % G2           
-        radius = 5.18e-04;                  % string radius [m]
-        rho = 7.8532e+03;                     % string Density [kg/m] 
-        T0 = 285.53;                           % tension [N] 
+        % E5           
+        radius = 1.65e-04;                  % string radius [m]
+        rho = 4.7936e+03;                     % string Density [kg/m] 
+        T0 = 73;                           % tension [N] 
         A = pi*radius^2;
         rA = rho*A;
-        E = 200e9;                          % young modulus [Pa]
+        E = 62.5e9;                          % young modulus [Pa]
         Inertia = (pi*radius^4)/ 4;        % moment of inertia    
         K = sqrt(E*Inertia/(rA*L^4));
         c = sqrt(T0/rA);
@@ -63,13 +63,13 @@ switch stringToPlay
 
         startFb = 20; maxFb = 20; endFb = 0;
     case 1
-        % D2           
-        radius = 6.99e-04;
-        rho = 7.8437e+03;                     
-        T0 = 291.54;                         
+        % A4           
+        radius = 3e-04;
+        rho = 2.5465e+03;                     
+        T0 = 57.10;                         
         A = pi*radius^2;
         rA = rho*A;
-        E = 200e9;                           
+        E = 19.5e9;                           
         Inertia = (pi*radius^4)/ 4;          
         K = sqrt(E*Inertia/(rA*L^4));
         c = sqrt(T0/rA);
@@ -79,28 +79,29 @@ switch stringToPlay
         
         startFb = 30; maxFb = 30; endFb = 0;
     case 2
-        % A1           
-        radius = 9.5e-04;
-        rho = 7.8158e+03;                          
-        T0 = 301.35;                           
+        % D4           
+        radius = 4.4e-04;
+        rho = 2.6471e+03;                          
+        T0 = 56.88;                           
         A = pi*radius^2;
         rA = rho*A;
-        E = 200e9;                          
+        E = 4.56e9;                          
         Inertia = (pi*radius^4)/ 4;             
         K = sqrt(E*Inertia/(rA*L^4));
         c = sqrt(T0/rA);
 
-        excitPos = 0.833;
-        outPos = 0.33*L;
+        excitPos = 0.733*L; %G2 C2
+        outPos = 0.53*L;
+
         startFb = 10; maxFb = 10; endFb = 0;
     case 3
-        % E1 
-        radius = 12.86e-04;
-        rho = 7.8375e+03;                          
-        T0 = 310.65;                           
+        % G3 
+        radius = 4.25e-04;
+        rho = 4.9167e+03;                          
+        T0 = 43.9;                           
         A = pi*radius^2;
         rA = rho*A;
-        E = 200e9;                          
+        E = 4.79e9;                          
         Inertia = (pi*radius^4)/ 4;            
         K = sqrt(E*Inertia/(rA*L^4));
         c = sqrt(T0/rA);
