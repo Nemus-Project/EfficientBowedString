@@ -12,8 +12,6 @@ close all
 %%%%% Custom Parameters
 play = true;
 
-saveAudio = false;
-
 %if set true the system is solved with Sherman Morrison formula, otherwise with backslash
 smSolver = true;
 
@@ -21,6 +19,28 @@ smSolver = true;
 desvagesFriction = false;
 
 stringToPlay = 3;   %0=E5, 1=A4, 2=D4, 3=G3
+
+%sets if to let the string free to vibrate at the end or to stop it
+freeVib = false;
+
+saveAudio = false;
+if saveAudio
+    cond = '_Stop';
+    if freeVib
+        cond = '_Free';
+    end
+    switch stringToPlay
+    case 0
+        string = 'E5';
+    case 1
+        string = 'A4';
+    case 2
+        string = 'D4';
+    case 3
+        string = 'G3';
+end
+    fileName = strcat('../Sounds/Violin/Notes/',string,cond,'.wav');
+end
 
 osFac = 1;          %Oversampling factor
 SR = 44100*osFac;   %Sample rate [Hz]
@@ -38,7 +58,8 @@ frettingPos = 1;
                 %27/32; %3rdm
                 %64/81; 3rdM
                 %8/9;   %1 semitone
-                %4/5;   4th
+                %4/5;   %4th
+                %2/3;   %5th
 
 L = baseLength*frettingPos;           
 
@@ -60,8 +81,12 @@ switch stringToPlay
 
         excitPos = 0.833;
         outPos = 0.33*L;
-
-        startFb = 20; maxFb = 20; endFb = 0;
+        
+        if freeVib
+            startFb = 20; maxFb = 20; endFb = 0;
+        else 
+            maxFb = 35;
+        end
     case 1
         % A4           
         radius = 3e-04;
@@ -77,7 +102,11 @@ switch stringToPlay
         excitPos = 0.833;
         outPos = 0.33*L;
         
-        startFb = 30; maxFb = 30; endFb = 0;
+        if freeVib
+            startFb = 30; maxFb = 30; endFb = 0;
+        else 
+            maxFb = 35;
+        end
     case 2
         % D4           
         radius = 4.4e-04;
@@ -92,8 +121,12 @@ switch stringToPlay
 
         excitPos = 0.733*L; %G2 C2
         outPos = 0.53*L;
-
-        startFb = 10; maxFb = 10; endFb = 0;
+        
+        if freeVib
+            startFb = 10; maxFb = 10; endFb = 0;
+        else 
+            maxFb = 35;
+        end
     case 3
         % G3 
         radius = 4.25e-04;
@@ -108,18 +141,20 @@ switch stringToPlay
 
         excitPos = 0.733*L; %G2 C2
         outPos = 0.53*L;
-        startFb = 10; maxFb = 10; endFb = 0;
+
+        if freeVib
+            startFb = 10; maxFb = 10; endFb = 0;
+        else 
+            maxFb = 35;
+        end
 end
 
 a = 100;            %Bow free parameter
-muD = 0.3;
+muD = 0.3;          %Desvages friction parameter          
 
 
 %%%%% Bow Speed & Pressure
 bowVel = zeros(1,timeSamples);
-
-% Const
-Fb(:) = 35;
 
 % %Linear ramp
 bowRampLength = 2*timeSamples/T;
@@ -128,6 +163,15 @@ timeFrac = 2;
 bowVel(1:floor(1*bowRampLength/timeFrac)) = linspace(startVb,maxVb,floor(1*bowRampLength/timeFrac));
 bowVel(floor(1*bowRampLength/timeFrac)+1:floor(2*bowRampLength/timeFrac)) = maxVb;
 bowVel(floor(2*bowRampLength/timeFrac)+1:floor(3*bowRampLength/timeFrac))= linspace(maxVb,endVb,bowRampLength/timeFrac);
+
+
+if freeVib
+    Fb(1:floor(1*bowRampLength/5)) = linspace(startFb,maxFb,floor(1*bowRampLength/5));
+    Fb(floor(1*bowRampLength/5)+1:floor(2*bowRampLength/5)) = maxFb;
+    Fb(floor(2*bowRampLength/5)+1:floor(3*bowRampLength/5))= linspace(maxFb,endFb,bowRampLength/5);
+else
+    Fb(:) = maxFb;
+end
 
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++%
 %%%%% Computing eigenfrequencies and eigenvectors
