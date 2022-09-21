@@ -18,7 +18,7 @@ smSolver = true;
 %sets if to use the improved friction model from desvages
 desvagesFriction = false;
 
-stringToPlay = 2;   %0=A3, 1=D3, 2=G2, 3=C2
+stringToPlay = 1;   %0=A3, 1=D3, 2=G2, 3=C2
 
 %sets if to let the string free to vibrate at the end or to stop it
 freeVib = false;
@@ -39,7 +39,7 @@ if saveAudio
     case 3
         string = 'C2';
 end
-    fileName = strcat('../Sounds/Cello/Notes/',string,cond,'.wav');
+    fileName = strcat('../Sounds/Cello/Notes/',string,cond,'_E','.wav');
 end
 
 osFac = 1;          %Oversampling factor
@@ -60,6 +60,7 @@ frettingPos = 1;
                 %8/9;   %1 semitone
                 %4/5;   %4th
                 %2/3;   %5th
+                %1/2^(nSemitone/12) %semitones
 
 L = baseLength*frettingPos;           
 

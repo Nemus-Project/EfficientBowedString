@@ -18,12 +18,12 @@ smSolver = true;
 %sets if to use the improved friction model from desvages
 desvagesFriction = false;
 
-stringToPlay = 3;   %0=G2, 1=D2, 2=A1, 3=E1
+stringToPlay = 1;   %0=G2, 1=D2, 2=A1, 3=E1
 
 %sets if to let the string free to vibrate at the end or to stop it
-freeVib = true;
+freeVib = false;
 
-saveAudio = true;
+saveAudio = false;
 if saveAudio
     cond = '_Stop';
     if freeVib
@@ -60,6 +60,7 @@ frettingPos = 1;
                 %8/9;   %1 semitone
                 %4/5;   %4th
                 %2/3;   %5th
+                %1/2^(nSemitone/12) %semitones
 
 L = baseLength*frettingPos;           
 
@@ -100,13 +101,13 @@ switch stringToPlay
         K = sqrt(E*Inertia/(rA*L^4));
         c = sqrt(T0/rA);
 
-        excitPos = 0.833;
+        excitPos = 0.6;%0.833;
         outPos = 0.33*L;
         
         if freeVib
             startFb = 30; maxFb = 30; endFb = 0;
         else
-            maxFb = 30;
+            maxFb = 35;
                     %20; %(5th)
         end
     case 2
@@ -121,13 +122,13 @@ switch stringToPlay
         K = sqrt(E*Inertia/(rA*L^4));
         c = sqrt(T0/rA);
 
-        excitPos = 0.833;
+        excitPos = 0.6;%0.833;
         outPos = 0.33*L;
 
         if freeVib
             startFb = 10; maxFb = 10; endFb = 0;
         else
-            maxFb = 35;
+            maxFb = 20;
                     %20;%(5th)
         end
     case 3

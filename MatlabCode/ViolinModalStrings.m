@@ -60,6 +60,7 @@ frettingPos = 1;
                 %8/9;   %1 semitone
                 %4/5;   %4th
                 %2/3;   %5th
+                %1/2^(nSemitone/12) %semitones
 
 L = baseLength*frettingPos;           
 
