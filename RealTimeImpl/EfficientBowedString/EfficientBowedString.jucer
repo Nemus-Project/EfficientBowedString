@@ -16,10 +16,6 @@
       <FILE id="fDsoY6" name="ModalStiffStringView.h" compile="0" resource="0"
             file="Source/ModalStiffStringView.h"/>
       <FILE id="MYacdT" name="Global.h" compile="0" resource="0" file="Source/Global.h"/>
-      <FILE id="d1bX30" name="Bowed1DWaveFirstOrder.cpp" compile="1" resource="0"
-            file="Source/Bowed1DWaveFirstOrder.cpp"/>
-      <FILE id="sDg1Yg" name="Bowed1DWaveFirstOrder.h" compile="0" resource="0"
-            file="Source/Bowed1DWaveFirstOrder.h"/>
       <FILE id="pKxgeB" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>
       <FILE id="BfPAob" name="PluginProcessor.h" compile="0" resource="0"
