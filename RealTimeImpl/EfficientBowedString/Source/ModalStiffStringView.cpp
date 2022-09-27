@@ -44,7 +44,7 @@ ModalStiffStringView::ModalStiffStringView()
 	mReadPosLabel.setJustificationType(juce::Justification::centred);
 
 	mBowPressureSlider.setRange(0.0, 100.0, 0.001);
-	mBowPressureSlider.setValue(10.0, juce::sendNotification);
+	mBowPressureSlider.setValue(5.0, juce::sendNotification);
 	mBowPressureSlider.setSliderStyle(juce::Slider::SliderStyle::LinearHorizontal);
 	mBowPressureSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 50, 15);
 
@@ -82,53 +82,23 @@ void ModalStiffStringView::paint(juce::Graphics& g)
 
 	std::vector<float> vCurStringState = mpStiffStringProcessor->GetStringState();
 
+	juce::Path vStringPath = VisualiseState(g, vCurStringState);
     g.setColour (Colours::cyan);
-    g.strokePath (VisualiseState(g, vCurStringState), PathStrokeType(2.0f));
-
-	//double vVisualScaling = 10;
-	//// String-boundaries are in the vertical middle of the component
-	//double vStringBoundaries = (getHeight() / 2.0) - (getHeight() / 4.0);
-	//auto vInputPos = getWidth() * mInputPosSlider.getValue() / 100.f;
-	//auto vReadPos = getWidth() * mReadPosSlider.getValue() / 100.f;
-
-	//float vInPointState = 0;
-	//float vReadPointState = 0;
-
-	//for (int i = 0; i < mStringModesNumber; ++i)
-	//{
-	//	vInPointState += vCurStringState[i] * mInputModes[i];
-	//	vReadPointState += vCurStringState[i] * mReadModes[i];
-	//}
-
-	//vInPointState = vInPointState * vVisualScaling * getHeight() + vStringBoundaries;
-	//vReadPointState = vReadPointState * vVisualScaling * getHeight() + vStringBoundaries;
-
-	//float vCircleSize = 10.f;
-	//juce::Rectangle<float> vInRectangle(vInputPos - vCircleSize / 2, vInPointState - vCircleSize / 2, vCircleSize, vCircleSize);
-	//g.setColour(juce::Colours::darkblue);
-	//g.fillEllipse(
-	//	vInRectangle.getX(),
-	//	vInRectangle.getY(),
-	//	juce::jmin(vInRectangle.getHeight(), vInRectangle.getWidth()),
-	//	juce::jmin(vInRectangle.getHeight(), vInRectangle.getWidth()));
-
-	//juce::Rectangle<float> vOutRectangle(vReadPos - vCircleSize / 2, vReadPointState - vCircleSize / 2, vCircleSize, vCircleSize);
-	//g.setColour(juce::Colours::firebrick);
-	//g.fillEllipse(
-	//	vOutRectangle.getX(),
-	//	vOutRectangle.getY(),
-	//	juce::jmin(vOutRectangle.getHeight(), vOutRectangle.getWidth()),
-	//	juce::jmin(vOutRectangle.getHeight(), vOutRectangle.getWidth()));
+    g.strokePath (vStringPath, PathStrokeType(2.0f));
+	g.fillPath(DrawInPointer(g, vStringPath));
+	g.fillPath(DrawOutPointer(g, vStringPath));
 }
+
 juce::Path ModalStiffStringView::VisualiseState (juce::Graphics& g, std::vector<float> aStringState)
 {
-    double vVisualScaling = 10;
+	//amplifies string movement for visualization purposes (string displacement is too tiny)
+    double vVisualScaling = 5.0;
     
     // String-boundaries are in the vertical middle of the component
     double vStringBoundaries = (getHeight() / 2.0) - (getHeight() / 4.0);
     
     // Initialise path
-    Path vStringPath;
+    juce::Path vStringPath;
     
     // Start path
 	vStringPath.startNewSubPath (0, vStringBoundaries);
@@ -159,8 +129,69 @@ juce::Path ModalStiffStringView::VisualiseState (juce::Graphics& g, std::vector<
 		vStringPath.lineTo (vX, vNewY);
 		vX += vSpacing;
     }
-    
+
+	//juce::Path vInPointerPath = DrawInPointer(g, vStringPath);
+	//juce::Path vOutPointerPath = DrawOutPointer(g, vStringPath);
+	//vStringPath.addPath(vInPointerPath);
+	//vStringPath.addPath(vOutPointerPath);
+
     return vStringPath;
+}
+
+juce::Path ModalStiffStringView::DrawInPointer(juce::Graphics& g, juce::Path aStringPath)
+{
+	// String-boundaries are in the vertical middle of the component
+	double vStringBoundaries = (getHeight() / 2.0) - (getHeight() / 4.0);
+	auto vInputPos = getWidth() * mInputPosSlider.getValue() / 100.f;
+
+	juce::Line<float> vInLine(vInputPos, getHeight(), vInputPos, 0.f);
+	juce::Array<juce::Point<float>> vPossibleIntersections;
+
+	bool vIntersects = IntersectsPath(aStringPath, vInLine, vPossibleIntersections);
+
+	//auto vInPoint = aStringPath.getPointAlongPath(vInputPos);
+
+	float vPointerSize = 10.f;
+	juce::Path vInPointerPath;
+	//juce::Rectangle<float> vInRectangle(vInPoint.getX() - vPointerSize / 2, vInPoint.getY() - vPointerSize / 2, vPointerSize, vPointerSize);
+	juce::Rectangle<float> vInRectangle(
+		vPossibleIntersections[0].getX() - vPointerSize / 2, 
+		vPossibleIntersections[0].getY() - vPointerSize / 2, 
+		vPointerSize, vPointerSize);
+
+	vInPointerPath.addEllipse(vInRectangle);
+
+	return vInPointerPath;
+}
+
+juce::Path ModalStiffStringView::DrawOutPointer(juce::Graphics& g, juce::Path aStringPath)
+{
+	// String-boundaries are in the vertical middle of the component
+	double vStringBoundaries = (getHeight() / 2.0) - (getHeight() / 4.0);
+	auto vReadPos = getWidth() * mReadPosSlider.getValue() / 100.f;
+
+	juce::Line<float> vInLine(vReadPos, getHeight(), vReadPos, 0.f);
+	juce::Array<juce::Point<float>> vPossibleIntersections;
+
+	bool vIntersects = IntersectsPath(aStringPath, vInLine, vPossibleIntersections);
+
+	//auto vReadPoint = aStringPath.getPointAlongPath(vReadPos);
+
+	float vPointerSize = 10.f;
+	//juce::Rectangle<float> vOutRectangle(vReadPoint.getX() - vPointerSize / 2, vReadPoint.getY() - vPointerSize / 2, vPointerSize, vPointerSize);
+	juce::Rectangle<float> vOutRectangle(
+		vPossibleIntersections[0].getX() - vPointerSize / 2, 
+		vPossibleIntersections[0].getY() - vPointerSize / 2, 
+		vPointerSize, vPointerSize);
+	juce::AffineTransform vTransform = juce::AffineTransform::rotation(
+		-juce::MathConstants<float>::pi / 4.f, 
+		vPossibleIntersections[0].getX(), vPossibleIntersections[0].getY());
+
+	juce::Path vReadPointerPath;
+	vReadPointerPath.addRectangle(vOutRectangle);
+	vReadPointerPath.applyTransform(vTransform);
+
+	return vReadPointerPath;
 }
 
 void ModalStiffStringView::resized()
@@ -297,3 +328,21 @@ void ModalStiffStringView::SetVisualizationModes()
 	mReadModes.resize(mStringModesNumber, 0.f);
 }
 
+bool ModalStiffStringView::IntersectsPath(const juce::Path& p, juce::Line<float> line, juce::Array<juce::Point<float>>& possibleIntersections)
+{
+	juce::PathFlatteningIterator i(p, juce::AffineTransform(), juce::Path::defaultToleranceForTesting);
+
+	juce::Point<float> intersectionPoint;
+	while (i.next())
+	{
+		if (line.intersects(juce::Line<float>(i.x1, i.y1, i.x2, i.y2), intersectionPoint))
+		{
+			possibleIntersections.add(intersectionPoint);
+		}
+	}
+
+	if (possibleIntersections.isEmpty())
+		return false;
+
+	return true;
+}

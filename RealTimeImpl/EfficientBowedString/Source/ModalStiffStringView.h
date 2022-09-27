@@ -68,6 +68,13 @@ private:
     int mStringModesNumber{ 0 };
     void SetVisualizationModes();
     juce::Path VisualiseState(juce::Graphics& g, std::vector<float> aStringState);
+    juce::Path DrawInPointer(juce::Graphics& g, juce::Path aStringPath);
+    juce::Path DrawOutPointer(juce::Graphics& g, juce::Path aStringPath);
+
+    /*
+    * Found: https://forum.juce.com/t/path-intersectsline-line-float-line-float-tolerance-point-float-intersection/32283
+    */
+    bool IntersectsPath(const juce::Path& p, juce::Line<float> line, juce::Array<juce::Point<float>>& possibleIntersections);
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ModalStiffStringView)
 };
