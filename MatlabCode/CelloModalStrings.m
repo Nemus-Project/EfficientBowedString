@@ -21,7 +21,7 @@ desvagesFriction = false;
 stringToPlay = 3;   %0=A3, 1=D3, 2=G2, 3=C2
 
 %sets if to let the string free to vibrate at the end or to stop it
-freeVib = false;
+freeVib = true;
 
 saveAudio = false;
 if saveAudio
@@ -39,7 +39,7 @@ if saveAudio
     case 3
         string = 'C2';
 end
-    fileName = strcat('../Sounds/Cello/Notes/',string,cond,'_E','.wav');
+    fileName = strcat('../Sounds/Cello/Notes/',string,cond,'.wav');
 end
 
 osFac = 2;          %Oversampling factor
@@ -81,12 +81,14 @@ switch stringToPlay
         c = sqrt(T0/rA);
 
         excitPos = 0.833;
-        outPos = 0.33*L;
+        %double output for stereo sound
+        outPos1 = 0.33*L;
+        outPos2 = 0.77*L;
         
         if freeVib
             startFb = 20; maxFb = 20; endFb = 0;
         else 
-            maxFb = 35;
+            maxFb = 15;
         end
     case 1
         % D3           
@@ -101,12 +103,14 @@ switch stringToPlay
         c = sqrt(T0/rA);
 
         excitPos = 0.833;
-        outPos = 0.33*L;
-        
+        %double output for stereo sound
+        outPos1 = 0.33*L;
+        outPos2 = 0.77*L;
+
         if freeVib
             startFb = 30; maxFb = 30; endFb = 0;
         else 
-            maxFb = 35;
+            maxFb = 20;
         end
     case 2
         % G2           
@@ -121,12 +125,14 @@ switch stringToPlay
         c = sqrt(T0/rA);
 
         excitPos = 0.733*L; %G2 C2
-        outPos = 0.53*L;
+        %double output for stereo sound
+        outPos1 = 0.53*L;
+        outPos2 = 0.77*L;
         
         if freeVib
             startFb = 10; maxFb = 10; endFb = 0;
         else 
-            maxFb = 35;
+            maxFb = 10;
         end
     case 3
         % C2 
@@ -141,12 +147,14 @@ switch stringToPlay
         c = sqrt(T0/rA);
 
         excitPos = 0.733*L; %G2 C2
-        outPos = 0.53*L;
+        %double output for stereo sound
+        outPos1 = 0.33*L;
+        outPos2 = 0.57*L;
 
         if freeVib
             startFb = 10; maxFb = 10; endFb = 0;
         else 
-            maxFb = 35;
+            maxFb = 10;
         end
 end
 
@@ -189,11 +197,13 @@ eigenFreqs = ComputeEigenFreq(T0, E,Inertia,L,rA,(1:modesNumber).');
 modesNumber = length(eigenFreqs) ;
 
 modesIn = zeros(modesNumber,1);
-modesOut = zeros(modesNumber,1);
+modesOut1 = zeros(modesNumber,1);
+modesOut2 = zeros(modesNumber,1);
 
 for i = 1:modesNumber
     modesIn(i) = sqrt(2/L)*sin(i*pi*excitPos/L);
-    modesOut(i) = sqrt(2/L)*sin(i*pi*outPos/L);
+    modesOut1(i) = sqrt(2/L)*sin(i*pi*outPos1/L);
+    modesOut2(i) = sqrt(2/L)*sin(i*pi*outPos2/L);
 end
 
 waveNumsSq = (-c^2 + sqrt(c^4 + 4*K^2*eigenFreqs.^2))/(2*K^2);
@@ -220,8 +230,7 @@ JOmega = [zeros(modesNumber),eye(modesNumber);-diag(eigenFreqs.^2),zeros(modesNu
 C = [zeros(modesNumber),zeros(modesNumber);zeros(modesNumber),diag(sigma0)];
 
 %%%%% Initializing outputs
-OutPlay = zeros(1,floor(timeSamples/osFac));
-Out = zeros(1,timeSamples);
+Out = zeros(timeSamples,2);
 
 %%%%% Initializing Sherman Morrison Algorithm
 %Offline computation of part of matrix A and extracting diagonal components
@@ -288,8 +297,10 @@ for i = 1:timeSamples
         xNext = A\B;
     end
     
-    uNext = (modesOut.')*xNext(1:modesNumber);
-    Out(i)= uNext;
+    uNext1 = (modesOut1.')*xNext(1:modesNumber);
+    uNext2 = (modesOut2.')*xNext(1:modesNumber);
+    Out(i,:)= [uNext1, uNext2];
+
 
     x = xNext;
 end
@@ -299,25 +310,33 @@ realTimeFrac = toc/T
 %%%%% Retrieving undersampled output
 
 %Calculating derivative for better sound output
-OutDiff = diff(Out);
+OutDiff1 = diff(Out(:,1));
+OutDiff2 = diff(Out(:,2));
+OutDiff = [OutDiff1,OutDiff2];
 
 finalOSFac = 1;
 if finalOSFac>osFac disp("Undersampling Error."); return; end
 
-OutPlay = zeros(1,floor(timeSamples/(osFac/finalOSFac)));
+OutPlay = zeros(floor(timeSamples/(osFac/finalOSFac)),2);
 
-%lowpass(Out,20000,SR);
-for i=1:size(OutDiff,2)
+%lowpassing before downsampling for recording
+lowpass(Out(:,1),20000,SR);
+lowpass(Out(:,2),20000,SR);
+for i=1:size(Out,1)
     if ~mod(i,osFac) || mod(i,osFac) == osFac/finalOSFac
         index = i/(osFac/finalOSFac);
-        OutPlay(index) = OutDiff(i);
+        OutPlay(index,:) = Out(i,:);
     end
 end
+
+OutPlay1 = diff(OutPlay(:,1));
+OutPlay2 = diff(OutPlay(:,2));
+OutPlay = [OutPlay1/max(abs(OutPlay1)),OutPlay2/max(abs(OutPlay2))];
 
 %if play soundsc(OutPlay,SR/osFac*finalOSFac); end
 if play soundsc(OutDiff,SR); end
 if saveAudio
-    audiowrite(fileName,OutPlay/max(abs(OutPlay)),SR/osFac*finalOSFac);
+    audiowrite(fileName,OutPlay,SR/osFac*finalOSFac);
 end
 
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++%
@@ -326,8 +345,10 @@ fontSize = 18;
 lineWidth = 1.5;
 
 figure
-plot(timeVec*1000,Out)
-ylim([min(Out),max(Out)]);
+plot(timeVec*1000,Out(:,1))
+hold on
+plot(timeVec*1000,Out(:,2))
+ylim([min(min(Out)),max(max(Out))]);
 xlabel('Time [s]');
 ylabel("u(t,x_o) [m]");
 
