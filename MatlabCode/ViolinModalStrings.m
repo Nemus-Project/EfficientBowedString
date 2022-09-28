@@ -297,23 +297,27 @@ end
 realTimeFrac = toc/T
 
 %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++%
-%%%%% Retrieving undersampled output for comparison with other schemes
+%%%%% Retrieving undersampled output
+
+%Calculating derivative for better sound output
+OutDiff = diff(Out);
+
 finalOSFac = 1;
 if finalOSFac>osFac disp("Undersampling Error."); return; end
 
 OutPlay = zeros(1,floor(timeSamples/(osFac/finalOSFac)));
 
 %lowpass(Out,20000,SR);
-for i=1:size(Out,2)
+for i=1:size(OutDiff,2)
     if ~mod(i,osFac) || mod(i,osFac) == osFac/finalOSFac
         index = i/(osFac/finalOSFac);
-        OutPlay(index) = Out(i);
+        OutPlay(index) = OutDiff(i);
     end
 end
 
-if play soundsc(OutPlay,SR/osFac*finalOSFac); end
+%if play soundsc(OutPlay,SR/osFac*finalOSFac); end
+if play soundsc(OutDiff,SR); end
 if saveAudio
-    fileName = strcat('string_',num2str(stringToPlay),'.wav');
     audiowrite(fileName,OutPlay/max(abs(OutPlay)),SR/osFac*finalOSFac);
 end
 
