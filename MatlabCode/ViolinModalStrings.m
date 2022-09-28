@@ -303,6 +303,7 @@ if finalOSFac>osFac disp("Undersampling Error."); return; end
 
 OutPlay = zeros(1,floor(timeSamples/(osFac/finalOSFac)));
 
+%lowpass(Out,20000,SR);
 for i=1:size(Out,2)
     if ~mod(i,osFac) || mod(i,osFac) == osFac/finalOSFac
         index = i/(osFac/finalOSFac);

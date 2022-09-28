@@ -18,7 +18,7 @@ smSolver = true;
 %sets if to use the improved friction model from desvages
 desvagesFriction = false;
 
-stringToPlay = 1;   %0=G2, 1=D2, 2=A1, 3=E1
+stringToPlay = 3;   %0=G2, 1=D2, 2=A1, 3=E1
 
 %sets if to let the string free to vibrate at the end or to stop it
 freeVib = false;
@@ -308,6 +308,7 @@ if finalOSFac>osFac disp("Undersampling Error."); return; end
 
 OutPlay = zeros(1,floor(timeSamples/(osFac/finalOSFac)));
 
+%lowpass(Out,20000,SR);
 for i=1:size(Out,2)
     if ~mod(i,osFac) || mod(i,osFac) == osFac/finalOSFac
         index = i/(osFac/finalOSFac);

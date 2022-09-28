@@ -18,7 +18,7 @@ smSolver = true;
 %sets if to use the improved friction model from desvages
 desvagesFriction = false;
 
-stringToPlay = 1;   %0=A3, 1=D3, 2=G2, 3=C2
+stringToPlay = 3;   %0=A3, 1=D3, 2=G2, 3=C2
 
 %sets if to let the string free to vibrate at the end or to stop it
 freeVib = false;
@@ -42,7 +42,7 @@ end
     fileName = strcat('../Sounds/Cello/Notes/',string,cond,'_E','.wav');
 end
 
-osFac = 1;          %Oversampling factor
+osFac = 2;          %Oversampling factor
 SR = 44100*osFac;   %Sample rate [Hz]
 T = 5;              %Time of Simulation [s]
 
@@ -302,6 +302,7 @@ if finalOSFac>osFac disp("Undersampling Error."); return; end
 
 OutPlay = zeros(1,floor(timeSamples/(osFac/finalOSFac)));
 
+%lowpass(Out,20000,SR);
 for i=1:size(Out,2)
     if ~mod(i,osFac) || mod(i,osFac) == osFac/finalOSFac
         index = i/(osFac/finalOSFac);
@@ -310,6 +311,7 @@ for i=1:size(Out,2)
 end
 
 if play soundsc(OutPlay,SR/osFac*finalOSFac); end
+%if play soundsc(Out,SR); end
 if saveAudio
     audiowrite(fileName,OutPlay/max(abs(OutPlay)),SR/osFac*finalOSFac);
 end
