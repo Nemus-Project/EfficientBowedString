@@ -3,6 +3,12 @@
 //==========================================================================
 ModalStiffStringView::ModalStiffStringView()
 {
+	mGainInitialValue = 0.f;
+	mInputPosInitialValue = 0.833f;
+	mReadPosInitialValue = 0.33f;
+	mBowPressureInitialValue = 5.f;
+	mBowSpeedInitialValue = 0.2f;
+
 	mPlayButton.addListener(this);
 	mResetButton.addListener(this);
 	mGainSlider.addListener(this);
@@ -12,7 +18,8 @@ ModalStiffStringView::ModalStiffStringView()
 	mBowSpeedSlider.addListener(this);
 	mStringChoiceBox.addListener(this);
 
-	mGainSlider.setRange(0.0, 5000.0, 0.1);
+	mGainSlider.setRange(0.0, 300.0, 0.1);
+	mGainSlider.setValue(mGainInitialValue, juce::sendNotification);
 	mGainSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
 	mGainSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 50, 15);
 
@@ -22,13 +29,13 @@ ModalStiffStringView::ModalStiffStringView()
 	mGainLabel.setJustificationType(juce::Justification::centred);
 
 	mInputPosSlider.setRange(0.0, 100.0, 0.01);
-	mInputPosSlider.setValue(0.733 * 100.0, juce::sendNotification);
+	mInputPosSlider.setValue(mInputPosInitialValue * 100.0, juce::sendNotification);
 	mInputPosSlider.setSliderStyle(juce::Slider::SliderStyle::LinearHorizontal);
 	mInputPosSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 50, 15);
 	mInputPosSlider.setTextValueSuffix(" %");
 
 	mReadPosSlider.setRange(0.0, 100.0, 0.01);
-	mReadPosSlider.setValue(0.53 * 100.0, juce::sendNotification);
+	mReadPosSlider.setValue(mReadPosInitialValue * 100.0, juce::sendNotification);
 	mReadPosSlider.setSliderStyle(juce::Slider::SliderStyle::LinearHorizontal);
 	mReadPosSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 50, 15);
 	mReadPosSlider.setTextValueSuffix(" %");
@@ -44,7 +51,7 @@ ModalStiffStringView::ModalStiffStringView()
 	mReadPosLabel.setJustificationType(juce::Justification::centred);
 
 	mBowPressureSlider.setRange(0.0, 100.0, 0.001);
-	mBowPressureSlider.setValue(5.0, juce::sendNotification);
+	mBowPressureSlider.setValue(mBowPressureInitialValue, juce::sendNotification);
 	mBowPressureSlider.setSliderStyle(juce::Slider::SliderStyle::LinearHorizontal);
 	mBowPressureSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 50, 15);
 
@@ -54,7 +61,7 @@ ModalStiffStringView::ModalStiffStringView()
 	mBowPressureLabel.setJustificationType(juce::Justification::centred);
 
 	mBowSpeedSlider.setRange(0.0, 2.0, 0.0001);
-	mBowSpeedSlider.setValue(0.2, juce::sendNotification);
+	mBowSpeedSlider.setValue(mBowSpeedInitialValue, juce::sendNotification);
 	mBowSpeedSlider.setSliderStyle(juce::Slider::SliderStyle::LinearHorizontal);
 	mBowSpeedSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 50, 15);
 	mBowSpeedSlider.setTextValueSuffix("m/s");
@@ -241,6 +248,12 @@ void ModalStiffStringView::buttonClicked(juce::Button* apButton)
 			mPlayButton.setToggleState(false, juce::sendNotification);
 		}
 		mpStiffStringProcessor->ResetStringStates();
+
+		mGainSlider.setValue(mGainInitialValue, juce::sendNotification);
+		mInputPosSlider.setValue(mInputPosInitialValue * 100.f, juce::sendNotification);
+		mReadPosSlider.setValue(mReadPosInitialValue * 100.f, juce::sendNotification);
+		mBowPressureSlider.setValue(mBowPressureInitialValue, juce::sendNotification);
+		mBowSpeedSlider.setValue(mBowSpeedInitialValue, juce::sendNotification);
 	}
 }
 

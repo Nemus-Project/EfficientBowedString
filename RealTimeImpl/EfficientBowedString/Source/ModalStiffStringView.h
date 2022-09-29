@@ -41,6 +41,12 @@ private:
 
     bool mPlayState{ false };
 
+    float mGainInitialValue;
+    float mInputPosInitialValue;
+    float mReadPosInitialValue;
+    float mBowPressureInitialValue;
+    float mBowSpeedInitialValue;
+
     juce::TextButton mPlayButton;
     juce::TextButton mResetButton;
 
