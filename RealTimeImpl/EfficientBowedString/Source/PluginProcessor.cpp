@@ -97,7 +97,7 @@ void FastBowedStringAudioProcessor::prepareToPlay (double sampleRate, int sample
 
     if (!mpModalStiffStringProcessor)
     {
-        mpModalStiffStringProcessor = std::make_shared<ModalStiffStringProcessor>(sampleRate, Global::Strings::kpCelloG2);
+        mpModalStiffStringProcessor = std::make_shared<ModalStiffStringProcessor>(sampleRate, Global::Strings::kpCelloG2.get());
     }
     else if (mSampleRate != sampleRate)
     {
@@ -117,14 +117,14 @@ void FastBowedStringAudioProcessor::prepareToPlay (double sampleRate, int sample
 
 void FastBowedStringAudioProcessor::releaseResources()
 {
-    delete(Global::Strings::kpCelloA3);
+    /*delete(Global::Strings::kpCelloA3);
     delete(Global::Strings::kpCelloD3);
     delete(Global::Strings::kpCelloG2);
     delete(Global::Strings::kpCelloC2);
     delete(Global::Strings::kpBassG2);
     delete(Global::Strings::kpBassD2);
     delete(Global::Strings::kpBassA1);
-    delete(Global::Strings::kpBassE1);
+    delete(Global::Strings::kpBassE1);*/
     // When playback stops, you can use this as an opportunity to free up any
     // spare memory, etc.
 }

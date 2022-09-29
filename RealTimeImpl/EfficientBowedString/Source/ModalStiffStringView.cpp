@@ -301,19 +301,35 @@ void ModalStiffStringView::comboBoxChanged(juce::ComboBox* comboBoxThatHasChange
 		}
 		if (mStringChoiceBox.getSelectedId() == Global::Strings::kpCelloA3->mId)
 		{
-			mpStiffStringProcessor->SetString(Global::Strings::kpCelloA3);
+			mpStiffStringProcessor->SetString(Global::Strings::kpCelloA3.get());
 		}
 		else if (mStringChoiceBox.getSelectedId() == Global::Strings::kpCelloD3->mId)
 		{
-			mpStiffStringProcessor->SetString(Global::Strings::kpCelloD3);
+			mpStiffStringProcessor->SetString(Global::Strings::kpCelloD3.get());
 		}
 		else if (mStringChoiceBox.getSelectedId() == Global::Strings::kpCelloG2->mId)
 		{
-			mpStiffStringProcessor->SetString(Global::Strings::kpCelloG2);
+			mpStiffStringProcessor->SetString(Global::Strings::kpCelloG2.get());
 		}
 		else if (mStringChoiceBox.getSelectedId() == Global::Strings::kpCelloC2->mId)
 		{
-			mpStiffStringProcessor->SetString(Global::Strings::kpCelloC2);
+			mpStiffStringProcessor->SetString(Global::Strings::kpCelloC2.get());
+		}
+		else if (mStringChoiceBox.getSelectedId() == Global::Strings::kpBassG2->mId)
+		{
+			mpStiffStringProcessor->SetString(Global::Strings::kpBassG2.get());
+		}
+		else if (mStringChoiceBox.getSelectedId() == Global::Strings::kpBassD2->mId)
+		{
+			mpStiffStringProcessor->SetString(Global::Strings::kpBassD2.get());
+		}
+		else if (mStringChoiceBox.getSelectedId() == Global::Strings::kpBassA1->mId)
+		{
+			mpStiffStringProcessor->SetString(Global::Strings::kpBassA1.get());
+		}
+		else if (mStringChoiceBox.getSelectedId() == Global::Strings::kpBassE1->mId)
+		{
+			mpStiffStringProcessor->SetString(Global::Strings::kpBassE1.get());
 		}
 		mStringModesNumber = mpStiffStringProcessor->GetModesNumber();
 		SetVisualizationModes();
