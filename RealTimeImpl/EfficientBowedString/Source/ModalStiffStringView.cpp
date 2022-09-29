@@ -18,7 +18,7 @@ ModalStiffStringView::ModalStiffStringView()
 	mBowSpeedSlider.addListener(this);
 	mStringChoiceBox.addListener(this);
 
-	mGainSlider.setRange(0.0, 300.0, 0.1);
+	mGainSlider.setRange(0.0, 1, 0.001);
 	mGainSlider.setValue(mGainInitialValue, juce::sendNotification);
 	mGainSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
 	mGainSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 50, 15);

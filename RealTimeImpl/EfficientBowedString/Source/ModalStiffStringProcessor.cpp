@@ -63,6 +63,8 @@ void ModalStiffStringProcessor::ResetStringStates()
     }
     std::fill(mStates[0].begin(), mStates[0].end(), 0);
     std::fill(mStates[1].begin(), mStates[1].end(), 0);
+
+    mPreviousSample = 0.0;
 }
 
 void ModalStiffStringProcessor::SetInputPos(float aNewPos)
@@ -208,7 +210,10 @@ float ModalStiffStringProcessor::ReadOutput()
             vOutputValue += mpModesOutCurr.load()[i] * mpStatesPtrs[0][i];
         }
     }
-    return (mGain.load() * vOutputValue);
+
+    float vDiffOutput = mGain.load() * (vOutputValue - mPreviousSample) / mTimeStep;
+    mPreviousSample = vOutputValue;
+    return vDiffOutput;
 }
 
 int ModalStiffStringProcessor::GetModesNumber()
@@ -388,13 +393,13 @@ void ModalStiffStringProcessor::ResetMatrices()
         mT11[i] = 1;
         mT12[i] = - 0.5f * mTimeStep;
         mT21[i] = - 0.5f * mTimeStep * (-mEigenFreqs[i] * mEigenFreqs[i]);
-        mT22[i] = 1;
+        mT22[i] = 1 + 0.5 * mTimeStep * mDampCoeffs[i];
 
         mSchurComp[i] = mT22[i] - mT21[i] * (mT11[i] * mT12[i]);
 
         mB11[i] = 1;
         mB12[i] = 0.5f * mTimeStep;
-        mB21[i] = 0.5 * mTimeStep * (-mEigenFreqs[i] * mEigenFreqs[i]);
-        mB22[i] = 1 - mTimeStep*mDampCoeffs[i];
+        mB21[i] = 0.5f * mTimeStep * (-mEigenFreqs[i] * mEigenFreqs[i]);
+        mB22[i] = 1 - 0.5 * mTimeStep * mDampCoeffs[i];
     }
 }

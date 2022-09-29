@@ -91,6 +91,9 @@ private:
     std::atomic<bool> mPlayState{ false };
     std::atomic<float> mGain{ 0.f };
 
+    //Needed for calculating derivative at output
+    float mPreviousSample{ 0.0 };
+
     //String params
     float mRadius{ 0.f };
     float mDensity{ 0.f };
