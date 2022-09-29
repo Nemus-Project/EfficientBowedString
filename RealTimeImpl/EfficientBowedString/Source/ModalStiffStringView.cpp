@@ -6,7 +6,7 @@ ModalStiffStringView::ModalStiffStringView()
 	mGainInitialValue = 0.f;
 	mInputPosInitialValue = 0.833f;
 	mReadPosInitialValue = 0.33f;
-	mBowPressureInitialValue = 5.f;
+	mBowPressureInitialValue = 2.f;
 	mBowSpeedInitialValue = 0.2f;
 
 	mPlayButton.addListener(this);
