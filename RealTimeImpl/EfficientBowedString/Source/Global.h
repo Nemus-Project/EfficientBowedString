@@ -72,6 +72,35 @@ namespace Global
             172.74f,
             (float)22.4e9,
             0.69f);
+
+        static String* kpBassG2 = new String(5,
+            "BassG2",
+            (float)5.18e-4,
+            (float)7.8532e3,
+            285.53f,
+            (float)200e9,
+            1.06f);
+        static String* kpBassD2 = new String(6,
+            "BassD2",
+            (float)6.99e-04,
+            (float)7.8437e+03,
+            291.54f,
+            (float)200e9,
+            1.06f);
+        static String* kpBassA1 = new String(7,
+            "BassA1",
+            (float)9.5e-04,
+            (float)7.8158e+03,
+            301.35f,
+            (float)200e9,
+            1.06f);
+        static String* kpBassE1 = new String(8,
+            "BassE1",
+            (float)12.86e-04,
+            (float)7.8375e+03,
+            310.65f,
+            (float)200e9,
+            1.06f);
     }
     
     static double cubicInterpolation (double* xVec, int l, double alpha)

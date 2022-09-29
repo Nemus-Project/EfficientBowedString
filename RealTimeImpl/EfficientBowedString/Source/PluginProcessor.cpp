@@ -121,6 +121,10 @@ void FastBowedStringAudioProcessor::releaseResources()
     delete(Global::Strings::kpCelloD3);
     delete(Global::Strings::kpCelloG2);
     delete(Global::Strings::kpCelloC2);
+    delete(Global::Strings::kpBassG2);
+    delete(Global::Strings::kpBassD2);
+    delete(Global::Strings::kpBassA1);
+    delete(Global::Strings::kpBassE1);
     // When playback stops, you can use this as an opportunity to free up any
     // spare memory, etc.
 }

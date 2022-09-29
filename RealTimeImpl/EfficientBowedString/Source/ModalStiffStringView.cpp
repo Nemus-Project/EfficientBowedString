@@ -76,6 +76,10 @@ ModalStiffStringView::ModalStiffStringView()
 	mStringChoiceBox.addItem(Global::Strings::kpCelloD3->mName, 2);
 	mStringChoiceBox.addItem(Global::Strings::kpCelloG2->mName, 3);
 	mStringChoiceBox.addItem(Global::Strings::kpCelloC2->mName, 4);
+	mStringChoiceBox.addItem(Global::Strings::kpBassG2->mName, 5);
+	mStringChoiceBox.addItem(Global::Strings::kpBassD2->mName, 6);
+	mStringChoiceBox.addItem(Global::Strings::kpBassA1->mName, 7);
+	mStringChoiceBox.addItem(Global::Strings::kpBassE1->mName, 8);
 	mStringChoiceBox.setSelectedId(3, juce::sendNotification);
 }
 
