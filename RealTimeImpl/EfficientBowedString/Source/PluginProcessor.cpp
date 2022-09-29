@@ -22,6 +22,10 @@ FastBowedStringAudioProcessor::FastBowedStringAudioProcessor()
                        )
 #endif
 {
+    if (!mpModalStiffStringProcessor)
+    {
+        mpModalStiffStringProcessor = std::make_shared<ModalStiffStringProcessor>(44100, Global::Strings::kpCelloG2.get());
+    }
 }
 
 FastBowedStringAudioProcessor::~FastBowedStringAudioProcessor()
@@ -93,8 +97,6 @@ void FastBowedStringAudioProcessor::changeProgramName (int index, const juce::St
 //==============================================================================
 void FastBowedStringAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
-    
-
     if (!mpModalStiffStringProcessor)
     {
         mpModalStiffStringProcessor = std::make_shared<ModalStiffStringProcessor>(sampleRate, Global::Strings::kpCelloG2.get());
