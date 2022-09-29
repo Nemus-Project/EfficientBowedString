@@ -3,6 +3,9 @@ RealTimeImpl/EfficientBowedString/Builds/*
 # Prerequisites
 *.d
 
+# Matlab
+*.asv
+
 # Compiled Object files
 *.slo
 *.lo
