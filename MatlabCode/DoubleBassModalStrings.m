@@ -293,8 +293,8 @@ for i = 1:timeSamples
         
         xNext = invAb - (1/(1+vt1))*invAv*vt2;
     else
-        A = I + 0.5*k*Fb(i)*lambda*zetaOutProd - 0.5*k*JOmega;
-        B = (I + 0.5*k*Fb(i)*(lambda - 2*d)*zetaOutProd + 0.5*k*JOmega - k*C)*x + k*Fb(i)*d*zeta*bowVel(i);
+        A = I + 0.5*k*Fb(i)*lambda*zetaOutProd - 0.5*k*JOmega  + 0.5*k*C;
+        B = (I + 0.5*k*Fb(i)*(lambda - 2*d)*zetaOutProd + 0.5*k*JOmega - 0.5*k*C)*x + k*Fb(i)*d*zeta*bowVel(i);
 
         xNext = A\B;
     end
