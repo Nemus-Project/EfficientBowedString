@@ -143,7 +143,6 @@ Inertia = (pi*radius^4)/ 4;
 K = sqrt(E*Inertia/(rA*L^4));
 c = sqrt(T0/rA);
 
-
 a = 100;            %Bow free parameter
 muD = 0.3;          %Desvages friction parameter
 
