@@ -73,12 +73,7 @@ switch stringToPlay
         radius = 1.65e-04;                  % string radius [m]
         rho = 4.7936e+03;                     % string Density [kg/m] 
         T0 = 73;                           % tension [N] 
-        A = pi*radius^2;
-        rA = rho*A;
         E = 62.5e9;                          % young modulus [Pa]
-        Inertia = (pi*radius^4)/ 4;        % moment of inertia    
-        K = sqrt(E*Inertia/(rA*L^4));
-        c = sqrt(T0/rA);
 
         excitPos = 0.833;
         outPos1 = 0.33*L;
@@ -94,12 +89,7 @@ switch stringToPlay
         radius = 3e-04;
         rho = 2.5465e+03;                     
         T0 = 57.10;                         
-        A = pi*radius^2;
-        rA = rho*A;
         E = 19.5e9;                           
-        Inertia = (pi*radius^4)/ 4;          
-        K = sqrt(E*Inertia/(rA*L^4));
-        c = sqrt(T0/rA);
 
         excitPos = 0.833;
         outPos1 = 0.33*L;
@@ -115,12 +105,7 @@ switch stringToPlay
         radius = 4.4e-04;
         rho = 2.6471e+03;                          
         T0 = 56.88;                           
-        A = pi*radius^2;
-        rA = rho*A;
         E = 4.56e9;                          
-        Inertia = (pi*radius^4)/ 4;             
-        K = sqrt(E*Inertia/(rA*L^4));
-        c = sqrt(T0/rA);
 
         excitPos = 0.733*L; %G2 C2
         outPos1 = 0.53*L;
@@ -136,12 +121,7 @@ switch stringToPlay
         radius = 4.25e-04;
         rho = 4.9167e+03;                          
         T0 = 43.9;                           
-        A = pi*radius^2;
-        rA = rho*A;
         E = 4.79e9;                          
-        Inertia = (pi*radius^4)/ 4;            
-        K = sqrt(E*Inertia/(rA*L^4));
-        c = sqrt(T0/rA);
 
         excitPos = 0.733*L; %G2 C2
         outPos1 = 0.53*L;
@@ -153,6 +133,11 @@ switch stringToPlay
             maxFb = 5;
         end
 end
+A = pi*radius^2;
+rA = rho*A;
+Inertia = (pi*radius^4)/ 4;            
+K = sqrt(E*Inertia/(rA*L^4));
+c = sqrt(T0/rA);
 
 a = 100;            %Bow free parameter
 muD = 0.3;          %Desvages friction parameter          
@@ -162,13 +147,13 @@ muD = 0.3;          %Desvages friction parameter
 bowVel = zeros(1,timeSamples);
 
 % %Linear ramp
-bowRampLength = 2*timeSamples/T;
+frac = 3; %number of sections in which the whole bow speed vector will be divided
+bowRampLength = floor(2*timeSamples/frac); %Time dedicated to speed variation. After this time the bow velocity will be zero
 maxVb = 0.2; startVb = 0.1; endVb = 0.0;
-timeFrac = 2;
+timeFrac = 3; %number of sections in which the velocity ramp will be divided
 bowVel(1:floor(1*bowRampLength/timeFrac)) = linspace(startVb,maxVb,floor(1*bowRampLength/timeFrac));
 bowVel(floor(1*bowRampLength/timeFrac)+1:floor(2*bowRampLength/timeFrac)) = maxVb;
 bowVel(floor(2*bowRampLength/timeFrac)+1:floor(3*bowRampLength/timeFrac))= linspace(maxVb,endVb,bowRampLength/timeFrac);
-
 
 if freeVib
     Fb(1:floor(1*bowRampLength/5)) = linspace(startFb,maxFb,floor(1*bowRampLength/5));
