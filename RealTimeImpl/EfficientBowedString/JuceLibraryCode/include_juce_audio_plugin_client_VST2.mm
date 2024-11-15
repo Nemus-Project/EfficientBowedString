@@ -5,4 +5,4 @@
 
 */
 
-#include <juce_audio_plugin_client_AU.r>
+#include <juce_audio_plugin_client/juce_audio_plugin_client_VST2.mm>
