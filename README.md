@@ -10,7 +10,7 @@ The names of the scripts indicate:
 `bowedStiffStringFDTD`: stiff string algorithm solved with the non-iterative solver applied to the first-order system (FDTD), with Sherman-Morrison\
 `SOIT`: ideal string solved with an iterative solver applied to the second-order system (FDTD)\
 `FOIT`: ideal string solved with an iterative solver applied to the first-order system (FDTD)\
-`FONIT`: ideal string solved with the non-iterative solver applied to the first-order system (FDTD), No Sherman-Morrison
+`FONIT`: ideal string solved with the non-iterative solver applied to the first-order system (FDTD), No Sherman-Morrison\
 `MOD`: ideal string solved with the non-iterative solver applied to the modal system  
 
 
