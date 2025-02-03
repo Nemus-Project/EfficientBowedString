@@ -64,7 +64,7 @@ if ~dampOn sigma0 = 0; sigma1 = 0; end
 %%%%% Compute grid spacing from variables
 epsilon = 0;          %Deviation from stability condition. eps \in [0,1)
 %h = sqrt((c^2*k^2 + 4*sigma1*k + sqrt((c^2*k^2 + 4*sigma1*k)^2+((16*K^2*k^2))))/2)*(1 + epsilon);
-h = 1.00*c*k;
+h = 1.0*c*k;   %linear part is unconditionally stable, I can use a smaller grid!
 N = floor(L/h);
 h = L/N;
 nPoints = N - 1;
