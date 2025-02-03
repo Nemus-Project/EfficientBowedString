@@ -5,12 +5,11 @@ This repository stores Matlab code (folder `MatlabCode`) and sample audios (fold
 
 The folder `RealTimeImpl` stores a real-time working string made with JUCE
 
-
 The names of the scripts indicate:  
-`bowedStiffStringModal`: stiff string algorithm solved with the modal non-iterative solver  
-`bowedStiffStringFDTD`: stiff string algorithm solved with the non-iterative solver applied to the first-order system (FDTD), with Sherman-Morrison
-`SOIT`: ideal string solved with an iterative solver applied to the second-order system (FDTD)
-`FOIT`: ideal string solved with an iterative solver applied to the first-order system (FDTD)
+`bowedStiffStringModal`: stiff string algorithm solved with the modal non-iterative solver\
+`bowedStiffStringFDTD`: stiff string algorithm solved with the non-iterative solver applied to the first-order system (FDTD), with Sherman-Morrison\
+`SOIT`: ideal string solved with an iterative solver applied to the second-order system (FDTD)\
+`FOIT`: ideal string solved with an iterative solver applied to the first-order system (FDTD)\
 `FONIT`: ideal string solved with the non-iterative solver applied to the first-order system (FDTD), No Sherman-Morrison
 `MOD`: ideal string solved with the non-iterative solver applied to the modal system  
 
