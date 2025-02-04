@@ -3,6 +3,9 @@ Companion page for the paper *Efficient Simulation of the Bowed String in Modal 
 
 This repository stores Matlab code (folder `MatlabCode`) and sample audios (folder `Sounds`) synthesised by solving the stiff string equation with the modal algorithm detailed in the paper.  
 
+###Paper Errata: The curve in Figure 1(c) of the paper, along with the corresponding formula in the caption, is
+incorrect. The correct version is stored here under the name `frictionCurves`. The correct formula is: $`\phi_\mathrm{C}(\eta)=\sign(\eta)(0.4 e^{-|\eta|/0.7}+0.35)`$.
+
 The folder `RealTimeImpl` stores a real-time working string made with JUCE
 
 The names of the scripts indicate:  
